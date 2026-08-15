@@ -1,0 +1,23 @@
+@media (max-width: 900px) {
+  .homepage-layout {
+    grid-template-columns: 1fr;
+  }
+  .hero-right {
+    display: none;
+  }
+  .dashboard-grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .summary-stat-row, .perf-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-row.duo, .form-row.trio {
+    grid-template-columns: 1fr;
+  }
+  .quick-metrics-bar {
+    grid-template-columns: 1fr;
+  }
+}

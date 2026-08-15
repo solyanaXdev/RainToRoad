@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %} Homepage | Rain-to-Road {% endblock %}
+
+{% block content %}
+<div class="hero-full-container">
+  
+  <div class="hero-content-wrapper">
+    
+    <h1 class="hero-title">
+      Predict <span class="hero-highlight">your journey.</span><br>
+      Understand how conditions<br>
+      affect travel time.
+    </h1>
+    <p class="hero-sub">
+      Real-time road travel time prediction using weather, traffic, and road conditions across Addis Ababa sub-cities and sefers.
+    </p>
+
+    <div class="form-card">
+      <h3 class="card-subtitle">Travel Conditions</h3>
+      
+      <form action="{{ url_for('predict') }}" method="POST" id="predictionForm">
+        
+        <div class="form-row duo">
+          <div class="input-field">
+            <label for="origin">Origin (Sub-City & Sefer)</label>
+            <select name="origin" id="origin">
+              {% for subcity, sefers in routes.items() %}
+                <optgroup label="{{ subcity }}">
+                  {% for sefer in sefers %}
+                    <option value="{{ sefer }}" {% if sefer == 'Bole Airport' %}selected{% endif %}>
+                      {{ sefer }} ({{ subcity }})
+                    </option>
+                  {% endfor %}
+                </optgroup>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="input-field">
+            <label for="destination">Destination (Sub-City & Sefer)</label>
+            <select name="destination" id="destination">
+              {% for subcity, sefers in routes.items() %}
+                <optgroup label="{{ subcity }}">
+                  {% for sefer in sefers %}
+                    <option value="{{ sefer }}" {% if sefer == 'Megenagna' %}selected{% endif %}>
+                      {{ sefer }} ({{ subcity }})
+                    </option>
+                  {% endfor %}
+                </optgroup>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row duo">
+          <div class="condition-box">
+            <div class="box-header">
+              <span>Rainfall</span>
+              <span class="icon">🌧️</span>
+            </div>
+            <div class="box-value-input">
+              <input type="number" step="0.1" name="rainfall" value="8.4" required>
+              <span class="unit">mm</span>
+            </div>
+          </div>
+
+          <div class="condition-box">
+            <div class="box-header">
+              <span>Temperature</span>
+              <span class="icon">🌡️</span>
+            </div>
+            <div class="box-value-input">
+              <input type="number" step="0.1" name="temperature" value="18.9" required>
+              <span class="unit">°C</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row duo">
+          <div class="condition-box">
+            <div class="box-header">
+              <span>Traffic Level</span>
+              <span class="icon">🚗</span>
+            </div>
+            <div class="box-value-input">
+              <input type="number" name="traffic" min="0" max="100" value="72" required>
+              <span class="unit">%</span>
+            </div>
+          </div>
+
+          <div class="condition-box">
+            <div class="box-header">
+              <span>Time of Day</span>
+              <span class="icon">🕒</span>
+            </div>
+            <div class="box-value-input">
+              <input type="time" name="time_of_day" value="17:30" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-field full">
+            <label for="road_type">Road Type</label>
+            <select name="road_type" id="road_type">
+              {% for rtype in road_types %}
+                <option value="{{ rtype }}">{{ rtype }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn-glow">PREDICT TRAVEL TIME</button>
+      </form>
+    </div>
+
+    <div class="quick-metrics-bar">
+      <div class="quick-metric green">
+        <span class="qm-label">Estimated Travel Time</span>
+        <div class="qm-value-row">
+          <span class="qm-value">21.7</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+      <div class="quick-metric blue">
+        <span class="qm-label">Normal Travel Time</span>
+        <div class="qm-value-row">
+          <span class="qm-value">14.2</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+      <div class="quick-metric red">
+        <span class="qm-label">Estimated Delay</span>
+        <div class="qm-value-row">
+          <span class="qm-value">+7.5</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="feature-strip-bar">
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>Real-time Prediction</h4>
+      <p>Predict travel time using weather and traffic conditions.</p>
+    </div>
+  </div>
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>ML Powered</h4>
+      <p>Built with Multiple Linear Regression modeling.</p>
+    </div>
+  </div>
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>Dynamic Distances</h4>
+      <p>Spatial Haversine calculation between Addis Ababa sefers.</p>
+    </div>
+  </div>
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>Performance Metrics</h4>
+      <p>MAE, MSE, RMSE, and R² score evaluation.</p>
+    </div>
+  </div>
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>Responsive Design</h4>
+      <p>Optimized for mobile, tablet, and desktop views.</p>
+    </div>
+  </div>
+  <div class="feature-pill">
+    <span class="f-icon"></span>
+    <div>
+      <h4>Delay Decomposition</h4>
+      <p>Separates baseline duration from weather/traffic delay.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

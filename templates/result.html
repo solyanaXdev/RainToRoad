@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %} Prediction Result | Rain-to-Road {% endblock %}
+
+{% block content %}
+<div class="hero-full-container">
+  <div class="result-card-glass">
+    
+    <div class="result-header">
+      <h2>JOURNEY ESTIMATE</h2>
+      <p class="route-subtitle">{{ origin }} ➔ {{ destination }} ({{ distance }} km)</p>
+    </div>
+
+    <div class="quick-metrics-bar">
+      <div class="quick-metric green">
+        <span class="qm-label">Estimated Travel Time</span>
+        <div class="qm-value-row">
+          <span class="qm-value">{{ est_time }}</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+
+      <div class="quick-metric blue">
+        <span class="qm-label">Normal Travel Time</span>
+        <div class="qm-value-row">
+          <span class="qm-value">{{ norm_time }}</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+
+      <div class="quick-metric red">
+        <span class="qm-label">Rain/Traffic Delay</span>
+        <div class="qm-value-row">
+          <span class="qm-value">{% if delay >= 0 %}+{% endif %}{{ delay }}</span>
+          <span class="qm-unit">minutes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Traffic Level</span>
+        <span class="detail-val">{{ traffic }}%</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Rainfall</span>
+        <span class="detail-val">{{ rainfall }} mm</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Temperature</span>
+        <span class="detail-val">{{ temperature }} °C</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Road Type</span>
+        <span class="detail-val">{{ road_type }}</span>
+      </div>
+    </div>
+
+    <a href="{{ url_for('home') }}" class="submit-btn-glow btn-link">ANOTHER PREDICTION</a>
+
+  </div>
+</div>
+{% endblock %}

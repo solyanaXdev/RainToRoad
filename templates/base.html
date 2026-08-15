@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Rain-to-Road | Predict Travel Time{% endblock %}</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('home') }}" class="brand-logo">
+        <span class="logo-icon">🌧️</span>
+        <div class="brand-text">
+          <span class="brand-title">RAIN-TO-ROAD</span>
+          <span class="brand-subtitle">Predict the road. Plan the journey.</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">Home</a>
+        <a href="{{ url_for('about') }}" class="nav-item {% if request.endpoint == 'about' %}active{% endif %}">About</a>
+        <a href="{{ url_for('insights') }}" class="nav-item {% if request.endpoint == 'insights' %}active{% endif %}">ML Insights</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-body">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

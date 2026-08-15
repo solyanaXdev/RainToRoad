@@ -1,0 +1,1299 @@
+{% extends "base.html" %}
+
+{% block title %}ML Insights | Rain-to-Road{% endblock %}
+
+{% block content %}
+
+<div class="insights-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <section class="insights-header">
+
+        <div class="insights-eyebrow">
+            MACHINE LEARNING
+        </div>
+
+        <h1>
+            ML INSIGHTS
+            <span>DASHBOARD</span>
+        </h1>
+
+        <p>
+            Explore dataset parameters, model performance,
+            regression coefficients, feature importance,
+            and validation diagnostics.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         OVERVIEW
+    ====================================================== -->
+
+    <section id="overview" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">01</span>
+
+            <div>
+
+                <h2>MODEL OVERVIEW</h2>
+
+                <p>
+                    Current Rain-to-Road machine learning configuration.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric-grid">
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    DATASET SIZE
+                </span>
+
+                <strong>
+                    {{ metrics.dataset_size }}
+                </strong>
+
+                <small>
+                    synthetic observations
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    TRAINING SET
+                </span>
+
+                <strong>
+                    {{ metrics.train_size }}
+                </strong>
+
+                <small>
+                    80% of dataset
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    TESTING SET
+                </span>
+
+                <strong>
+                    {{ metrics.test_size }}
+                </strong>
+
+                <small>
+                    20% unseen data
+                </small>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    SELECTED MODEL
+                </span>
+
+                <strong>
+                    Multiple Linear Regression
+                </strong>
+
+                <small>
+                    primary prediction model
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="data-notice">
+
+            <div class="notice-icon">
+                DATA
+            </div>
+
+            <div>
+
+                <strong>
+                    Training Data Status
+                </strong>
+
+                <p>
+                    This prototype currently uses a synthetic
+                    transportation dataset generated for ML
+                    development and evaluation. It is not live
+                    Addis Ababa traffic data.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PERFORMANCE
+    ====================================================== -->
+
+    <section id="metrics" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">02</span>
+
+            <div>
+
+                <h2>MODEL PERFORMANCE</h2>
+
+                <p>
+                    Evaluation results calculated from the
+                    held-out testing dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="performance-grid">
+
+            <div class="performance-card">
+
+                <span>MAE</span>
+
+                <strong>
+                    {{ metrics.mae }}
+                </strong>
+
+                <small>
+                    minutes
+                </small>
+
+                <p>
+                    Mean Absolute Error
+                </p>
+
+            </div>
+
+
+            <div class="performance-card">
+
+                <span>MSE</span>
+
+                <strong>
+                    {{ metrics.mse }}
+                </strong>
+
+                <small>
+                    minutes²
+                </small>
+
+                <p>
+                    Mean Squared Error
+                </p>
+
+            </div>
+
+
+            <div class="performance-card">
+
+                <span>RMSE</span>
+
+                <strong>
+                    {{ metrics.rmse }}
+                </strong>
+
+                <small>
+                    minutes
+                </small>
+
+                <p>
+                    Root Mean Squared Error
+                </p>
+
+            </div>
+
+
+            <div class="performance-card">
+
+                <span>R²</span>
+
+                <strong>
+                    {{ metrics.r2 }}
+                </strong>
+
+                <small>
+                    {{ metrics.variance_explained }}% variance explained
+                </small>
+
+                <p>
+                    Coefficient of Determination
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COEFFICIENTS
+    ====================================================== -->
+
+    <section id="coefficients" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">03</span>
+
+            <div>
+
+                <h2>REGRESSION COEFFICIENTS</h2>
+
+                <p>
+                    Coefficients learned by the trained
+                    Linear Regression model.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="insights-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Feature
+                        </th>
+
+                        <th>
+                            Coefficient
+                        </th>
+
+                        <th>
+                            Interpretation
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in regression_coefficients %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.feature }}
+                        </td>
+
+                        <td class="
+                            {% if item.coefficient > 0 %}
+                                coefficient-positive
+                            {% else %}
+                                coefficient-negative
+                            {% endif %}
+                        ">
+
+                            {% if item.coefficient > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ "%.3f"|format(item.coefficient) }}
+
+                        </td>
+
+                        <td>
+                            {{ item.interpretation }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTUAL VS PREDICTED
+    ====================================================== -->
+
+    <section id="actual-vs-pred" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">04</span>
+
+            <div>
+
+                <h2>ACTUAL VS PREDICTED</h2>
+
+                <p>
+                    Comparison between observed synthetic
+                    test values and model predictions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <canvas id="actualPredictedChart"></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURE IMPORTANCE
+    ====================================================== -->
+
+    <section id="feature-importance" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">05</span>
+
+            <div>
+
+                <h2>FEATURE IMPORTANCE</h2>
+
+                <p>
+                    Permutation importance calculated using
+                    the held-out test dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <canvas id="featureImportanceChart"></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RESIDUALS
+    ====================================================== -->
+
+    <section id="residuals" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">06</span>
+
+            <div>
+
+                <h2>RESIDUALS</h2>
+
+                <p>
+                    Prediction errors across the test sample.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <canvas id="residualChart"></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODEL COMPARISON
+    ====================================================== -->
+
+    <section id="comparison" class="insights-section">
+
+        <div class="section-heading">
+
+            <span class="section-number">07</span>
+
+            <div>
+
+                <h2>MODEL COMPARISON</h2>
+
+                <p>
+                    All values below are calculated from
+                    independently trained models.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="insights-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Model
+                        </th>
+
+                        <th>
+                            MAE
+                        </th>
+
+                        <th>
+                            RMSE
+                        </th>
+
+                        <th>
+                            R² Score
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in comparison %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ item.model }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(item.mae) }}
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(item.rmse) }}
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(item.r2) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     CHART.JS
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+    /* =====================================================
+       GLOBAL SETTINGS
+    ====================================================== */
+
+    Chart.defaults.color = "#82959d";
+
+    Chart.defaults.borderColor =
+        "rgba(255, 255, 255, 0.07)";
+
+    Chart.defaults.font.family =
+        "Inter, sans-serif";
+
+
+    /* =====================================================
+       SHARED COLORS
+    ====================================================== */
+
+    const PURPLE =
+        "#a855f7";
+
+    const PURPLE_LIGHT =
+        "#c084fc";
+
+    const BLUE =
+        "#3b82f6";
+
+    const BLUE_LIGHT =
+        "#60a5fa";
+
+    const CYAN =
+        "#06b6d4";
+
+    const GRID =
+        "rgba(255, 255, 255, 0.055)";
+
+    const TEXT =
+        "#d7e2e5";
+
+    const MUTED =
+        "#82959d";
+
+
+    /* =====================================================
+       SHARED TOOLTIP
+    ====================================================== */
+
+    const tooltipSettings = {
+
+        backgroundColor:
+            "rgba(5, 12, 24, 0.96)",
+
+        borderColor:
+            "rgba(168, 85, 247, 0.40)",
+
+        borderWidth: 1,
+
+        titleColor:
+            "#ffffff",
+
+        bodyColor:
+            "#d7e2e5",
+
+        padding: 12,
+
+        displayColors: true
+
+    };
+
+
+    /* =====================================================
+       ACTUAL VS PREDICTED
+    ====================================================== */
+
+    const actualVsPredicted =
+        {{ actual_vs_pred | tojson }};
+
+
+    const actualPredictedCanvas =
+        document.getElementById(
+            "actualPredictedChart"
+        );
+
+
+    const actualData =
+        actualVsPredicted.actual;
+
+
+    const predictedData =
+        actualVsPredicted.predicted;
+
+
+    const allActualValues =
+        actualData.map(
+            point => Number(point.y)
+        );
+
+
+    const allPredictedValues =
+        predictedData.map(
+            point => Number(point.y)
+        );
+
+
+    const allValues =
+        allActualValues.concat(
+            allPredictedValues
+        );
+
+
+    const minimumValue =
+        Math.min(...allValues);
+
+
+    const maximumValue =
+        Math.max(...allValues);
+
+
+    new Chart(
+        actualPredictedCanvas,
+        {
+
+            type: "scatter",
+
+            data: {
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Actual",
+
+                        data:
+                            actualData,
+
+                        backgroundColor:
+                            PURPLE,
+
+                        borderColor:
+                            PURPLE_LIGHT,
+
+                        pointRadius:
+                            4,
+
+                        pointHoverRadius:
+                            7,
+
+                        pointBorderWidth:
+                            1
+
+                    },
+
+
+                    {
+
+                        label:
+                            "Predicted",
+
+                        data:
+                            predictedData,
+
+                        backgroundColor:
+                            BLUE,
+
+                        borderColor:
+                            BLUE_LIGHT,
+
+                        pointRadius:
+                            4,
+
+                        pointHoverRadius:
+                            7,
+
+                        pointBorderWidth:
+                            1
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                interaction: {
+
+                    mode:
+                        "nearest",
+
+                    intersect:
+                        false
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display:
+                            true,
+
+                        labels: {
+
+                            color:
+                                TEXT,
+
+                            usePointStyle:
+                                true,
+
+                            padding:
+                                18
+
+                        }
+
+                    },
+
+
+                    tooltip:
+                        tooltipSettings
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Test Observation",
+
+                            color:
+                                PURPLE_LIGHT,
+
+                            font: {
+
+                                weight:
+                                    "600"
+
+                            }
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                MUTED
+
+                        },
+
+                        grid: {
+
+                            color:
+                                GRID
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Travel Time (minutes)",
+
+                            color:
+                                BLUE_LIGHT,
+
+                            font: {
+
+                                weight:
+                                    "600"
+
+                            }
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                MUTED
+
+                        },
+
+                        grid: {
+
+                            color:
+                                GRID
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+    /* =====================================================
+       FEATURE IMPORTANCE
+    ====================================================== */
+
+    const featureImportance =
+        {{ feature_importances | tojson }};
+
+
+    const importanceCanvas =
+        document.getElementById(
+            "featureImportanceChart"
+        );
+
+
+    new Chart(
+        importanceCanvas,
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    featureImportance.labels,
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Permutation Importance",
+
+                        data:
+                            featureImportance.scores,
+
+                        backgroundColor:
+                            "rgba(168, 85, 247, 0.78)",
+
+                        borderColor:
+                            PURPLE,
+
+                        borderWidth:
+                            1,
+
+                        borderRadius:
+                            6,
+
+                        borderSkipped:
+                            false
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                indexAxis:
+                    "y",
+
+                interaction: {
+
+                    mode:
+                        "index",
+
+                    intersect:
+                        false
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display:
+                            true,
+
+                        labels: {
+
+                            color:
+                                TEXT,
+
+                            usePointStyle:
+                                true,
+
+                            padding:
+                                18
+
+                        }
+
+                    },
+
+
+                    tooltip:
+                        tooltipSettings
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero:
+                            true,
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Importance Score",
+
+                            color:
+                                BLUE_LIGHT,
+
+                            font: {
+
+                                weight:
+                                    "600"
+
+                            }
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                MUTED
+
+                        },
+
+                        grid: {
+
+                            color:
+                                GRID
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        ticks: {
+
+                            color:
+                                TEXT
+
+                        },
+
+                        grid: {
+
+                            display:
+                                false
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+    /* =====================================================
+       RESIDUALS
+    ====================================================== */
+
+    const residualData =
+        {{ residuals | tojson }};
+
+
+    const residualCanvas =
+        document.getElementById(
+            "residualChart"
+        );
+
+
+    new Chart(
+        residualCanvas,
+        {
+
+            type: "scatter",
+
+            data: {
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Residual",
+
+                        data:
+                            residualData,
+
+                        backgroundColor:
+                            "rgba(168, 85, 247, 0.82)",
+
+                        borderColor:
+                            PURPLE_LIGHT,
+
+                        pointRadius:
+                            4,
+
+                        pointHoverRadius:
+                            7,
+
+                        pointBorderWidth:
+                            1
+
+                    },
+
+
+                    {
+
+                        label:
+                            "Zero Error",
+
+                        data: [
+
+                            {
+                                x:
+                                    Math.min(
+                                        ...residualData.map(
+                                            point =>
+                                                Number(point.x)
+                                        )
+                                    ),
+
+                                y:
+                                    0
+                            },
+
+                            {
+                                x:
+                                    Math.max(
+                                        ...residualData.map(
+                                            point =>
+                                                Number(point.x)
+                                        )
+                                    ),
+
+                                y:
+                                    0
+                            }
+
+                        ],
+
+                        showLine:
+                            true,
+
+                        pointRadius:
+                            0,
+
+                        borderColor:
+                            BLUE,
+
+                        borderWidth:
+                            2,
+
+                        borderDash:
+                            [6, 6],
+
+                        fill:
+                            false
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                interaction: {
+
+                    mode:
+                        "nearest",
+
+                    intersect:
+                        false
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display:
+                            true,
+
+                        labels: {
+
+                            color:
+                                TEXT,
+
+                            usePointStyle:
+                                true,
+
+                            padding:
+                                18
+
+                        }
+
+                    },
+
+
+                    tooltip:
+                        tooltipSettings
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Predicted Travel Time (minutes)",
+
+                            color:
+                                BLUE_LIGHT,
+
+                            font: {
+
+                                weight:
+                                    "600"
+
+                            }
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                MUTED
+
+                        },
+
+                        grid: {
+
+                            color:
+                                GRID
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Residual (minutes)",
+
+                            color:
+                                PURPLE_LIGHT,
+
+                            font: {
+
+                                weight:
+                                    "600"
+
+                            }
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                MUTED
+
+                        },
+
+                        grid: {
+
+                            color:
+                                GRID
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+</script>
+
+
+{% endblock %}

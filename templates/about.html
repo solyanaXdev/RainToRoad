@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %} About | Rain-to-Road {% endblock %}
+
+{% block content %}
+<div class="hero-full-container">
+  <div class="about-card-glass">
+    
+    <div class="about-header">
+      <span class="about-icon">🌧️</span>
+      <h2>ABOUT RAIN-TO-ROAD</h2>
+    </div>
+
+    <p class="about-intro">
+      Rain-to-Road is a machine learning platform that predicts real-time road travel times based on live weather, traffic congestion, and infrastructure conditions across Addis Ababa sub-cities and sefers.
+    </p>
+
+    <div class="about-grid">
+      <div class="about-box">
+        <h3>THE PROBLEM</h3>
+        <p>Severe rainfall and peak-hour traffic cause unpredictable delays across Addis Ababa, confusing everyday navigation tools.</p>
+      </div>
+
+      <div class="about-box">
+        <h3>OUR SOLUTION</h3>
+        <p>Multiple Linear Regression models train continuously on weather and distance data to calculate accurate travel arrival estimates.</p>
+      </div>
+
+      <div class="about-box">
+        <h3>FEATURES ANALYZED</h3>
+        <p>Rainfall (mm), Traffic Density (%), Temperature (°C), Departure Time, Road Classification, and Route Distance.</p>
+      </div>
+
+      <div class="about-box">
+        <h3>WHY REGRESSION?</h3>
+        <p>Since travel duration is continuous, multiple linear regression provides transparent, lightweight, and precise mathematical scoring.</p>
+      </div>
+    </div>
+
+    <div class="about-credit-bar">
+      <span>Developed & Designed by</span>
+      <h3 class="creator-name">Solyana Hailegebriel</h3>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
